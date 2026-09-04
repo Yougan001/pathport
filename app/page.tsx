@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { flushSync } from 'react-dom';
 import Link from 'next/link';
 import {
   FolderCheck,
@@ -37,7 +36,6 @@ import {
   type CopyProgress,
 } from '@/core/archive.mjs';
 import { download } from '@/lib/download';
-import { registerPathTools } from '@/lib/browser-tools';
 
 const SAMPLE =
   'Brand/Logo.svg\nBrand/logo.svg\nInvoice/CON.pdf\nNotes/meeting?.txt\nPhotos/café.jpg\nPhotos/café.jpg\nDocs/brief.md\ndocs/notes.md\nReadme.txt';
@@ -79,12 +77,10 @@ export default function Home() {
   const [progress, setProgress] = useState<CopyProgress | null>(null);
   const folderInput = useRef<HTMLInputElement>(null);
   const activeCopy = useRef<AbortController | null>(null);
-  const currentReport = useRef<Report | null>(SAMPLE_REPORT);
 
   function invalidate() {
     activeCopy.current?.abort();
     activeCopy.current = null;
-    currentReport.current = null;
     setCopying(false);
     setProgress(null);
     setReport(null);
@@ -94,7 +90,6 @@ export default function Home() {
   }
 
   function publishReport(next: Report) {
-    currentReport.current = next;
     setReport(next);
     setPage(0);
     setFilter('all');
@@ -190,22 +185,7 @@ export default function Home() {
   }
 
   useEffect(() => {
-    const unregister = registerPathTools({
-      read: () => currentReport.current,
-      apply: (text, length) => {
-        const next = inspectPaths(parseManifest(text), { rootLength: length });
-        flushSync(() => {
-          invalidate();
-          setSources(null);
-          setPaths(text);
-          setRootLength(String(length));
-          publishReport(next);
-        });
-        return next;
-      },
-    });
     return () => {
-      unregister?.();
       activeCopy.current?.abort();
     };
   }, []);

@@ -23,8 +23,6 @@ Run `npm run typecheck` and `npm run lint` for application code. Vendored `compo
 - A 65-path list spans three pages; page three shows the final five files, starting with file-60.txt.
 - Editing the input clears the old report. A traversal path displays an error with zero old result rows.
 
-The available browser does not expose `document.modelContext`. The optional `inspect_delivery_paths` and `read_delivery_summary` WebMCP contracts were not runtime-verified; the standard UI does not depend on them.
-
 ## Boundaries
 
 These are functional tests, not filesystem certification or a performance benchmark. No actual Windows/macOS/Linux extraction matrix has been completed. The planned names use conservative rules and cannot promise compatibility with every application or ZIP utility.
