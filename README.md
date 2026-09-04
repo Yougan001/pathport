@@ -2,11 +2,24 @@
 
 Check a whole folder's names before sending it to another operating system.
 
+[Open the browser tool](https://yougan001.github.io/pathport/) · [中文说明](README.zh-CN.md)
+
+![Pathport's folder delivery report](docs/images/workspace.png)
+
 `Docs/guide.md` and `docs/notes.md` are separate folders on some systems and the same folder on others. Pathport checks the tree, not just the last filename, then builds a deterministic original → destination map. It never renames the source files.
 
-## Current stage
+## Use it
 
-The portable path engine is available now. A browser interface and portable-copy ZIP export are in development; they are not part of this first source release.
+1. Choose a folder, or paste relative paths with `/` between folders.
+2. Set the space needed for your destination root. The default reserves 40 UTF-16 units, including its final separator.
+3. Review the original → destination names. Directory changes propagate to every child.
+4. Download a JSON manifest, or a ZIP copy if you selected real files.
+
+The ZIP contains `files/` and `pathport-manifest.json`. Existing files are never overwritten or renamed. A name check does not read file contents; ZIP export reads them locally, in chunks. There is no upload endpoint, telemetry or third-party script in the app.
+
+Pasted paths cannot create a ZIP of files that the browser has not been given. Folder selection depends on browser support; use the pasted list when a directory picker is unavailable.
+
+## Path engine
 
 ```js
 import { inspectPaths } from './core/paths.mjs';
@@ -22,7 +35,7 @@ console.table(report.entries);
 Run the dependency-free engine tests with Node 22 or newer:
 
 ```sh
-node --test tests/*.test.mjs
+node --test tests/paths.test.mjs
 ```
 
 ## Checks and limits
@@ -34,10 +47,28 @@ node --test tests/*.test.mjs
 
 Use forward slashes for relative paths. Absolute paths, traversal segments, duplicate source paths and oversized input are rejected. The engine accepts up to 10,000 files, 32 path levels and 30,000 tree entries. A literal backslash inside a name is treated as a Windows-invalid character, not a path separator.
 
-Case comparison uses NFC plus JavaScript uppercase. It is intentionally conservative, not an implementation of every filesystem's Unicode table. The 240-unit destination budget includes a configurable root prefix and the future archive's `files/` directory. Over-budget plans remain blocked; they are not silently flattened.
+Case comparison uses NFC plus JavaScript uppercase. It is intentionally conservative, not an implementation of every filesystem's Unicode table. The 240-unit destination budget includes a configurable root prefix and the archive's `files/` directory. Over-budget plans remain blocked; they are not silently flattened.
+
+ZIP copies accept up to 100 MiB of content. They preserve file bytes, not permissions, timestamps, empty directories or symbolic links. ZIPs are stored without compression to avoid wasting time recompressing media. Canceling discards the unfinished output. The JSON manifest includes original names: review it before sharing sensitive folder names.
 
 Renaming can break relative links, imports or project references. Pathport does not rewrite file contents and cannot certify compatibility with a particular application, filesystem, sync service or legacy ZIP reader.
 
 Rules are grounded in [Microsoft's naming documentation](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file). The stricter delivery budgets are project choices, not Windows limits.
+
+## Development
+
+```sh
+npm ci
+npm test
+npm run lint
+npm run typecheck
+npm run dev
+```
+
+React + TypeScript, Vinext/Vite, and fflate for ZIP packaging. The path engine has no dependencies. The UI uses a small selection of shadcn primitives and Lucide icons; see [third-party notices](THIRD_PARTY_NOTICES.md).
+
+`npm run build` creates a static export. The Pages workflow sets `GITHUB_PAGES=true` and publishes `dist/client/pathport`. Some Windows Node/Vinext combinations fail at build shutdown; do not treat emitted HTML as a successful release. The Linux workflow must finish successfully before deployment.
+
+[Testing notes](docs/testing.md) explain exactly what was checked and what was not. Bug reports with a small, anonymized path list are welcome. If this saves a delivery from a filename collision, a star helps others find it.
 
 MIT licensed.
