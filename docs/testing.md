@@ -29,4 +29,6 @@ The available browser does not expose `document.modelContext`. The optional `ins
 
 These are functional tests, not filesystem certification or a performance benchmark. No actual Windows/macOS/Linux extraction matrix has been completed. The planned names use conservative rules and cannot promise compatibility with every application or ZIP utility.
 
-The production release gate is the Linux GitHub Actions build. On this Windows environment Vinext can finish writing static HTML and still exit nonzero at process shutdown; that is a failed command, not a passing build.
+The production release gate is the Linux GitHub Actions build. The first browser-stage build caught a missing local-only hosting manifest in the clean checkout; Vite now loads that optional hosting integration only when the manifest exists. GitHub Pages needs no private local configuration.
+
+On this Windows environment the native build exits nonzero during client output, without a complete static export; that is a failed command, not a passing build.
