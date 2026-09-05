@@ -2,7 +2,7 @@
 
 Check a whole folder's names before sending it to another operating system.
 
-[Open the browser tool](https://yougan001.github.io/pathport/) · [中文说明](README.zh-CN.md)
+[Open the browser tool](https://yougan001.github.io/pathport/) · [中文说明](README.zh-CN.md) · [Releases](https://github.com/Yougan001/pathport/releases)
 
 ![Pathport's folder delivery report](docs/images/workspace.png)
 
@@ -69,6 +69,6 @@ React + TypeScript, Vinext/Vite, and fflate for ZIP packaging. The path engine h
 
 `npm run build` creates a static export. The Pages workflow sets `GITHUB_PAGES=true` and publishes `dist/client/pathport`. Some Windows Node/Vinext combinations fail at build shutdown; do not treat emitted HTML as a successful release. The Linux workflow must finish successfully before deployment.
 
-[Testing notes](docs/testing.md) explain exactly what was checked and what was not. Bug reports with a small, anonymized path list are welcome. If this saves a delivery from a filename collision, a star helps others find it.
+[Testing notes](docs/testing.md) explain exactly what was checked and what was not. [Report a path or ZIP problem](https://github.com/Yougan001/pathport/issues/new?template=path-problem.yml) with a small, anonymized example; the [contribution guide](CONTRIBUTING.md) explains the relevant checks. If this saves a delivery from a filename collision, a star helps others find it.
 
 MIT licensed.

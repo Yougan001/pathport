@@ -1,0 +1,35 @@
+name: Path plan or ZIP problem
+description: Report an unexpected destination name or portable-copy result
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: Use invented filenames and tiny files. Reports contain original names, so review them before sharing. English and Chinese are welcome.
+  - type: textarea
+    id: paths
+    attributes:
+      label: Minimal relative path list
+      description: Preserve the case, spaces and Unicode characters needed to reproduce the problem. Use / between folders.
+    validations:
+      required: true
+  - type: input
+    id: root
+    attributes:
+      label: Destination root length
+      placeholder: "For example, 40"
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: Expected and actual result
+      description: Include the original-to-destination mapping. For ZIP issues, explain which path or file bytes differ and how you checked them.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Version and environment
+      placeholder: "Release/commit, OS, browser, and extraction tool if relevant"
+    validations:
+      required: true
